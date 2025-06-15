@@ -20,7 +20,7 @@ All development and testing are done locally.
 | **Auth**        | JWT (HS512)                                          |
 | **Docs & UI**   | Swagger UI / OpenAPI & H2 DB (for embedded tests)    |
 | **IDE**         | VS Code + Java Extension Pack (Microsoft) +          |
-                  |   Java Auto Config (Pleiades)                        |
+|                 |   Java Auto Config (Pleiades)                        |
 
 ---
 
