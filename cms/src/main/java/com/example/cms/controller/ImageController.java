@@ -1,4 +1,3 @@
-// src/main/java/com/example/cms/controller/ImageController.java
 package com.example.cms.controller;
 
 import com.example.cms.entity.Image;
@@ -24,16 +23,23 @@ public class ImageController {
     return imageService.storeImage(file);
   }
 
+  // ImageController.java
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyRole('ADMIN','GUEST')")
-  public ResponseEntity<Resource> getImage(@PathVariable Long id) throws Exception {
-    Image img = imageService.getImageById(id);
-    PathResource resource = new PathResource(Paths.get(img.getFilepath()));
-    MediaType type = MediaTypeFactory.getMediaType(img.getFilename())
-        .orElse(MediaType.APPLICATION_OCTET_STREAM);
-    return ResponseEntity.ok()
-        .contentType(type)
-        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + img.getFilename() + "\"")
-        .body(resource);
+  public ResponseEntity<Resource> getImage(@PathVariable Long id) {
+    try {
+      Image img = imageService.getImageById(id);
+      PathResource resource = new PathResource(Paths.get(img.getFilepath()));
+
+      MediaType type = MediaTypeFactory.getMediaType(img.getFilename())
+          .orElse(MediaType.APPLICATION_OCTET_STREAM);
+
+      return ResponseEntity.ok()
+          .contentType(type)
+          .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + img.getFilename() + "\"")
+          .body(resource);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404
+    }
   }
 }
