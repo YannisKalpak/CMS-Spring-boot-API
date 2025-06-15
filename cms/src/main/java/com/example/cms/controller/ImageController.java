@@ -1,55 +1,39 @@
+// src/main/java/com/example/cms/controller/ImageController.java
 package com.example.cms.controller;
 
 import com.example.cms.entity.Image;
 import com.example.cms.service.ImageService;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/images")
+@RequiredArgsConstructor
 public class ImageController {
+  private final ImageService imageService;
 
-  @Autowired
-  private ImageService imageService;
-
-  @PostMapping
-  public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) {
-    try {
-      Image savedImage = imageService.saveImage(file);
-      return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public Image upload(@RequestPart("image") MultipartFile file) throws Exception {
+    return imageService.storeImage(file);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getImage(@PathVariable Long id) {
-    try {
-      Image image = imageService.getImageById(id);
-      // Serve static resource from classpath
-      Resource resource = new ClassPathResource("static" + image.getFilepath());
-      if (!resource.exists()) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
-      }
-      Path path = Paths.get(resource.getURI());
-      String contentType = Files.probeContentType(path);
-
-      return ResponseEntity.ok()
-          .contentType(MediaType.parseMediaType(contentType))
-          .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + image.getFilename() + "\"")
-          .body(resource);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
+  @PreAuthorize("hasAnyRole('ADMIN','GUEST')")
+  public ResponseEntity<Resource> getImage(@PathVariable Long id) throws Exception {
+    Image img = imageService.getImageById(id);
+    PathResource resource = new PathResource(Paths.get(img.getFilepath()));
+    MediaType type = MediaTypeFactory.getMediaType(img.getFilename())
+        .orElse(MediaType.APPLICATION_OCTET_STREAM);
+    return ResponseEntity.ok()
+        .contentType(type)
+        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + img.getFilename() + "\"")
+        .body(resource);
   }
 }

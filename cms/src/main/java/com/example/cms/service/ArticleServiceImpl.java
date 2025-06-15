@@ -1,31 +1,31 @@
+// src/main/java/com/example/cms/service/ArticleServiceImpl.java
 package com.example.cms.service;
 
+import com.example.cms.dto.ArticleRequest;
 import com.example.cms.entity.Article;
 import com.example.cms.entity.Image;
 import com.example.cms.repository.ArticleRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
-
-  @Autowired
-  private ArticleRepository articleRepository;
-
-  @Autowired
-  private ImageService imageService;
+  private final ArticleRepository articleRepository;
+  private final ImageService imageService;
 
   @Override
-  public Article createArticle(String title, String content, MultipartFile imageFile) throws Exception {
-    Image savedImage = imageService.saveImage(imageFile);
-
-    Article article = new Article();
-    article.setTitle(title);
-    article.setContent(content);
-    article.setImage(savedImage);
-    return articleRepository.save(article);
+  public Article createArticle(ArticleRequest data, MultipartFile imageFile) throws Exception {
+    Article a = new Article();
+    a.setTitle(data.getTitle());
+    a.setContent(data.getContent());
+    if (imageFile != null && !imageFile.isEmpty()) {
+      Image img = imageService.storeImage(imageFile);
+      a.setImage(img);
+    }
+    return articleRepository.save(a);
   }
 
   @Override
@@ -36,36 +36,31 @@ public class ArticleServiceImpl implements ArticleService {
   @Override
   public Article getArticleById(Long id) throws Exception {
     return articleRepository.findById(id)
-        .orElseThrow(() -> new Exception("Article not found with id: " + id));
+        .orElseThrow(() -> new IllegalArgumentException("Article not found"));
   }
 
   @Override
-  public Article updateArticle(Long id, String title, String content, MultipartFile imageFile) throws Exception {
+  public Article updateArticle(Long id, ArticleRequest data, MultipartFile imageFile) throws Exception {
     Article existing = getArticleById(id);
-
-    existing.setTitle(title);
-    existing.setContent(content);
-
+    existing.setTitle(data.getTitle());
+    existing.setContent(data.getContent());
     if (imageFile != null && !imageFile.isEmpty()) {
-      // Delete old image
-      Image oldImage = existing.getImage();
-      if (oldImage != null) {
-        imageService.deleteImage(oldImage);
+      // delete old
+      if (existing.getImage() != null) {
+        imageService.deleteImage(existing.getImage());
       }
-      // Save new image
-      Image newImage = imageService.saveImage(imageFile);
-      existing.setImage(newImage);
+      Image newImg = imageService.storeImage(imageFile);
+      existing.setImage(newImg);
     }
-
+    existing.setUpdatedAt(java.time.Instant.now());
     return articleRepository.save(existing);
   }
 
   @Override
   public void deleteArticle(Long id) throws Exception {
     Article existing = getArticleById(id);
-    Image image = existing.getImage();
-    if (image != null) {
-      imageService.deleteImage(image);
+    if (existing.getImage() != null) {
+      imageService.deleteImage(existing.getImage());
     }
     articleRepository.delete(existing);
   }

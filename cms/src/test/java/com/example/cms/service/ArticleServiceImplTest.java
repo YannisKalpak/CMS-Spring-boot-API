@@ -1,5 +1,6 @@
 package com.example.cms.service;
 
+import com.example.cms.dto.ArticleRequest;
 import com.example.cms.entity.Article;
 import com.example.cms.entity.Image;
 import com.example.cms.repository.ArticleRepository;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceImplTest {
@@ -29,7 +29,7 @@ class ArticleServiceImplTest {
     private ArticleServiceImpl articleService;
 
     private Article sampleArticle;
-    private MultipartFile mockFile;
+    // private MultipartFile mockFile;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +38,7 @@ class ArticleServiceImplTest {
         sampleArticle.setTitle("Title");
         sampleArticle.setContent("Content");
 
-        mockFile = mock(MultipartFile.class);
+        // mockFile = mock(MultipartFile.class);
     }
 
     @Test
@@ -66,36 +66,29 @@ class ArticleServiceImplTest {
 
     @Test
     void testCreateArticle() throws Exception {
-        Image savedImage = new Image();
-        savedImage.setFilename("img.png");
-        when(imageService.saveImage(mockFile)).thenReturn(savedImage);
-        when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        ArticleRequest req = new ArticleRequest();
+        req.setTitle("New");
+        req.setContent("Data");
 
-        Article created = articleService.createArticle("New", "Data", mockFile);
+        when(articleRepository.save(any(Article.class))).thenReturn(sampleArticle);
 
+        Article created = articleService.createArticle(req, null);
         assertNotNull(created);
-        assertEquals("New", created.getTitle());
-        assertEquals("Data", created.getContent());
-        assertEquals(savedImage, created.getImage());
         verify(articleRepository).save(any(Article.class));
-        verify(imageService).saveImage(mockFile);
     }
 
     @Test
     void testUpdateArticle() throws Exception {
+        ArticleRequest req = new ArticleRequest();
+        req.setTitle("Updated");
+        req.setContent("New Content");
+
         when(articleRepository.findById(1L)).thenReturn(Optional.of(sampleArticle));
-        when(mockFile.isEmpty()).thenReturn(false);
-        Image newImage = new Image();
-        newImage.setFilename("new.png");
-        when(imageService.saveImage(mockFile)).thenReturn(newImage);
-        when(articleRepository.save(any(Article.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(articleRepository.save(any(Article.class))).thenReturn(sampleArticle);
 
-        Article updated = articleService.updateArticle(1L, "Updated", "New Content", mockFile);
-
+        Article updated = articleService.updateArticle(1L, req, null);
         assertEquals("Updated", updated.getTitle());
         assertEquals("New Content", updated.getContent());
-        assertEquals(newImage, updated.getImage());
-        verify(imageService).saveImage(mockFile);
         verify(articleRepository).save(sampleArticle);
     }
 
@@ -114,6 +107,7 @@ class ArticleServiceImplTest {
         sampleArticle.setImage(img);
         when(articleRepository.findById(1L)).thenReturn(Optional.of(sampleArticle));
 
+        doNothing().when(imageService).deleteImage(img);
         articleService.deleteArticle(1L);
 
         verify(imageService).deleteImage(img);

@@ -1,58 +1,106 @@
 package com.example.cms.controller;
 
 import com.example.cms.entity.User;
-import com.example.cms.repository.UserRepository;
+import com.example.cms.security.CustomUserDetails;
 import com.example.cms.security.CustomUserDetailsService;
 import com.example.cms.util.JwtUtil;
-import java.util.Optional;
+import java.util.Collections;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@WebMvcTest(controllers = AuthController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@AutoConfigureMockMvc(addFilters = false)
-public class AuthControllerTest {
+@ExtendWith(MockitoExtension.class)
+class AuthControllerTest {
 
-  @Autowired
   private MockMvc mockMvc;
 
   @Mock
-  private CustomUserDetailsService userDetailsService;
+  private AuthenticationManager authManager;
 
   @Mock
   private JwtUtil jwtUtil;
 
   @Mock
-  private UserRepository userRepository;
+  private CustomUserDetailsService userService;
 
-  @Mock
-  private PasswordEncoder passwordEncoder;
+  @InjectMocks
+  private AuthController authController;
 
-  // Update testLoginSuccess method
+  @BeforeEach
+  void setUp() {
+    mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+  }
+
   @Test
-  public void testLoginSuccess() throws Exception {
-    User user = new User();
-    user.setUsername("admin");
-    user.setPasswordHash("encodedPassword");
-    user.setRole("ADMIN");
+  void testLoginSuccess() throws Exception {
+    // Create mock User entity
+    User mockUser = new User();
+    mockUser.setUsername("johnny");
+    mockUser.setRole("ADMIN");
+    mockUser.setPasswordHash("password");
 
-    when(userRepository.findByUsername("admin")).thenReturn(Optional.of(user));
-    when(passwordEncoder.matches("password", "encodedPassword")).thenReturn(true);
-    when(jwtUtil.generateToken("admin", "ADMIN")).thenReturn("fake-jwt-token");
+    // Wrap in CustomUserDetails
+    CustomUserDetails userDetails = new CustomUserDetails(mockUser);
+
+    // Create authentication with CustomUserDetails as principal
+    Authentication auth = new UsernamePasswordAuthenticationToken(
+        userDetails, // Correct principal type
+        null,
+        userDetails.getAuthorities());
+
+    when(authManager.authenticate(any())).thenReturn(auth);
+    when(jwtUtil.generateToken("johnny", "ADMIN")).thenReturn("jwt-token");
 
     mockMvc.perform(post("/api/auth/login")
         .contentType(MediaType.APPLICATION_JSON)
-        .content("{\"username\":\"admin\",\"password\":\"password\"}"))
+        .content("{\"username\":\"johnny\",\"password\":\"string\"}"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.token").value("fake-jwt-token"));
+        .andExpect(jsonPath("$.token").value("jwt-token"));
+  }
+
+  @Test
+  void testLoginWithInvalidRole() throws Exception {
+    User mockUser = new User();
+    mockUser.setUsername("invalid");
+    mockUser.setRole("INVALID_ROLE");
+
+    CustomUserDetails userDetails = new CustomUserDetails(mockUser);
+    Authentication auth = new UsernamePasswordAuthenticationToken(
+        userDetails,
+        null,
+        Collections.singletonList(new SimpleGrantedAuthority("ROLE_INVALID")));
+
+    when(authManager.authenticate(any())).thenReturn(auth);
+
+    mockMvc.perform(post("/api/auth/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\"username\":\"invalid\",\"password\":\"pass\"}"))
+        .andExpect(status().isOk()); // Should still return 200 with token
+  }
+
+  @Test
+  void testLoginFailure() throws Exception {
+    when(authManager.authenticate(any()))
+        .thenThrow(new BadCredentialsException("bad credentials"));
+
+    mockMvc.perform(post("/api/auth/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\"username\":\"wrong\",\"password\":\"creds\"}"))
+        .andExpect(status().isUnauthorized());
   }
 }

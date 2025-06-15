@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class ImageServiceImplTest {
@@ -32,27 +32,24 @@ class ImageServiceImplTest {
         tempDir = Files.createTempDirectory("images");
         // Inject rootLocation via reflection
         ReflectionTestUtils.setField(imageService, "rootLocation", tempDir);
-        /*
-         * var rootField = ImageServiceImpl.class.getDeclaredField("rootLocation");
-         * rootField.setAccessible(true);
-         * rootField.set(imageService, tempDir);
-         */
+        var rootField = ImageServiceImpl.class.getDeclaredField("rootLocation");
+        rootField.setAccessible(true);
+        rootField.set(imageService, tempDir);
+
     }
 
     @Test
-    void testSaveImage_Success() throws Exception {
+    void testStoreImage_Success() throws Exception {
         MultipartFile file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn("photo.png");
-        when(file.getBytes()).thenReturn("data".getBytes());
+        byte[] content = "data".getBytes();
+        when(file.getBytes()).thenReturn(content);
 
-        // Add mock initialization
         Image saved = new Image();
-        saved.setFilename("generated-name.png");
-        when(imageRepository.save(any())).thenReturn(saved);
+        when(imageRepository.save(any(Image.class))).thenReturn(saved);
 
-        Image result = imageService.saveImage(file);
+        Image result = imageService.storeImage(file);
         assertNotNull(result);
-        // Verify file exists in tempDir
         Path stored = tempDir.resolve(result.getFilename());
         assertTrue(Files.exists(stored));
         verify(imageRepository).save(any(Image.class));
@@ -68,7 +65,6 @@ class ImageServiceImplTest {
 
         // No need to stub, deleteImage handles repository.delete internally
         imageService.deleteImage(img);
-
         assertFalse(Files.exists(file));
         verify(imageRepository).delete(img);
     }

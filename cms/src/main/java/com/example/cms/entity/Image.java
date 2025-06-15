@@ -1,11 +1,9 @@
 package com.example.cms.entity;
 
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(name = "images")
 public class Image {
   @Id
@@ -13,15 +11,21 @@ public class Image {
   private Long id;
 
   @Column(nullable = false)
-  private String filename; // e.g., "a1b2c3d4-uuid.jpg"
+  private String filename;
 
   @Column(nullable = false)
-  private String filepath; // e.g., "/images/a1b2c3d4-uuid.jpg"
+  private String filepath;
 
-  @Column(nullable = false)
+  @Column(nullable = false, updatable = false)
   private Instant uploadedAt;
 
   public Image() {
+    // JPA
+  }
+
+  @PrePersist
+  protected void onCreate() {
+    this.uploadedAt = Instant.now();
   }
 
   public Long getId() {
@@ -51,9 +55,4 @@ public class Image {
   public Instant getUploadedAt() {
     return uploadedAt;
   }
-
-  public void setUploadedAt(Instant uploadedAt) {
-    this.uploadedAt = uploadedAt;
-  }
-
 }

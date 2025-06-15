@@ -3,82 +3,69 @@ package com.example.cms.controller;
 import com.example.cms.dto.ArticleRequest;
 import com.example.cms.entity.Article;
 import com.example.cms.service.ArticleService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/articles")
+@RequiredArgsConstructor
 public class ArticleController {
 
-  @Autowired
-  private ArticleService articleService;
+  private final ArticleService articleService;
+  private final ObjectMapper objectMapper;
 
-  @PostMapping
-  public ResponseEntity<?> createArticle(
-      @Valid @RequestPart("data") ArticleRequest articleRequest,
-      @RequestPart("image") MultipartFile imageFile) {
-    try {
-      Article article = articleService.createArticle(
-          articleRequest.getTitle(),
-          articleRequest.getContent(),
-          imageFile
-      );
-      return new ResponseEntity<>(article, HttpStatus.CREATED);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Article> createArticle(
+      @RequestPart("data") String dataJson,
+      @RequestPart("image") MultipartFile image) throws Exception {
+    // manually parse the JSON part
+    ArticleRequest request = objectMapper.readValue(dataJson, ArticleRequest.class);
+    Article created = articleService.createArticle(request, image);
+    return ResponseEntity.ok(created);
   }
 
   @GetMapping
-  public ResponseEntity<List<Article>> getAllArticles() {
-    List<Article> articles = articleService.getAllArticles();
-    return ResponseEntity.ok(articles);
+  public ResponseEntity<List<Article>> listArticles() {
+    return ResponseEntity.ok(articleService.getAllArticles());
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getArticleById(@PathVariable Long id) {
+  public ResponseEntity<Article> getArticle(@PathVariable Long id) {
     try {
-      Article article = articleService.getArticleById(id);
-      return ResponseEntity.ok(article);
+      return ResponseEntity.ok(articleService.getArticleById(id));
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+      // You can customize the error response as needed
+      return ResponseEntity.internalServerError().build();
     }
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<?> updateArticle(
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping(path = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Article> updateArticle(
       @PathVariable Long id,
-      @Valid @RequestPart("data") ArticleRequest articleRequest,
-      @RequestPart(value = "image", required = false) MultipartFile imageFile) {
-    try {
-      Article updated = articleService.updateArticle(
-          id,
-          articleRequest.getTitle(),
-          articleRequest.getContent(),
-          imageFile
-      );
-      return ResponseEntity.ok(updated);
-    } catch (Exception e) {
-      if (e.getMessage().contains("not found")) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-      }
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
+      @RequestPart("data") String dataJson,
+      @RequestPart("image") MultipartFile image) throws Exception {
+    ArticleRequest request = objectMapper.readValue(dataJson, ArticleRequest.class);
+    Article updated = articleService.updateArticle(id, request, image);
+    return ResponseEntity.ok(updated);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
     try {
       articleService.deleteArticle(id);
-      return ResponseEntity.noContent().build();
+      return ResponseEntity.ok().build();
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+      // You can customize the error response as needed
+      return ResponseEntity.internalServerError().build();
     }
   }
 }

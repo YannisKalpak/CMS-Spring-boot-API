@@ -1,25 +1,15 @@
+// src/main/java/com/example/cms/dto/AuthResponse.java
 package com.example.cms.dto;
 
 import lombok.AllArgsConstructor;
-//import lombok.Data;
-//import lombok.Getter;
+import lombok.Getter;
 
-//@Data
-//@Getter
-// @AllArgsConstructor
+@Getter
+@AllArgsConstructor
 public class AuthResponse {
   private String token;
-
-  public AuthResponse(String token) {
-    this.token = token;
-  }
-
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
+  private String username;
+  private String role;
 }
+// This class represents the response sent back to the client after a successful
+// authentication.
