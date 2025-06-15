@@ -1,0 +1,826 @@
+{
+	"info": {
+		"_postman_id": "516a87c1-e7a8-4c58-99ba-de2e2b7c136b",
+		"name": "CMS API",
+		"description": "Documentation for CMS API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45906639",
+		"_collection_link": "https://john-5342975.postman.co/workspace/John's-Workspace~359f3cf0-6b65-4c68-8b76-06bb7ffd40e1/collection/45906639-516a87c1-e7a8-4c58-99ba-de2e2b7c136b?action=share&source=collection_link&creator=45906639"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "articles",
+					"item": [
+						{
+							"name": "{id}",
+							"item": [
+								{
+									"name": "get Article",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/articles/3",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"3"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/articles/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"articles",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"id\": -6996387,\n  \"title\": \"cupidatat aliqua\",\n  \"content\": \"in\",\n  \"image\": {\n    \"id\": 23823573,\n    \"filename\": \"Excepteur\",\n    \"filepath\": \"dolor non\",\n    \"uploadedAt\": \"1975-03-18T05:12:17.651Z\"\n  },\n  \"createdAt\": \"2007-10-22T15:40:51.936Z\",\n  \"updatedAt\": \"1983-06-28T12:37:36.361Z\"\n}"
+										}
+									]
+								},
+								{
+									"name": "update Article",
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "password",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "admin",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "{\"title\":\"Sukuna is destroying the Shibuya Preferacture\", \"content\":\"Destruction in Shibya\"}",
+													"description": "(Required) ",
+													"type": "text"
+												},
+												{
+													"key": "image",
+													"description": "(Required) ",
+													"type": "file",
+													"src": "/D:/Saved Pictures/5beea9710a99780b3961b3494b2a6d39.jpg"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/articles/9",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"9"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "multipart/form-data"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "data",
+															"value": "co",
+															"description": "(Required) ",
+															"type": "text"
+														},
+														{
+															"key": "image",
+															"description": "(Required) ",
+															"type": "file",
+															"src": []
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/articles/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"articles",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"id\": -6996387,\n  \"title\": \"cupidatat aliqua\",\n  \"content\": \"in\",\n  \"image\": {\n    \"id\": 23823573,\n    \"filename\": \"Excepteur\",\n    \"filepath\": \"dolor non\",\n    \"uploadedAt\": \"1975-03-18T05:12:17.651Z\"\n  },\n  \"createdAt\": \"2007-10-22T15:40:51.936Z\",\n  \"updatedAt\": \"1983-06-28T12:37:36.361Z\"\n}"
+										}
+									]
+								},
+								{
+									"name": "delete Article",
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "password",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "admin",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/articles/8",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"8"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/articles/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"articles",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "list Articles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/articles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"articles"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/articles",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": -12863133,\n    \"title\": \"a\",\n    \"content\": \"sunt veniam occaecat eiusmod voluptate\",\n    \"image\": {\n      \"id\": 74575556,\n      \"filename\": \"eiusmod ut\",\n      \"filepath\": \"officia et\",\n      \"uploadedAt\": \"2019-04-07T16:56:19.775Z\"\n    },\n    \"createdAt\": \"1996-05-26T11:22:28.789Z\",\n    \"updatedAt\": \"2008-12-28T02:54:19.329Z\"\n  },\n  {\n    \"id\": 9534917,\n    \"title\": \"adipisicing nostr\",\n    \"content\": \"sint nulla sunt ad\",\n    \"image\": {\n      \"id\": 82448336,\n      \"filename\": \"do consequat aute voluptate\",\n      \"filepath\": \"cillum\",\n      \"uploadedAt\": \"2018-03-27T03:27:40.065Z\"\n    },\n    \"createdAt\": \"2003-03-05T12:56:42.740Z\",\n    \"updatedAt\": \"1995-08-13T17:24:00.329Z\"\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "create Article",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "data",
+											"value": "{\"title\":\"Statistical Results comparison\",\"content\":\"Statistics, results table\"}",
+											"description": "(Required) ",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"description": "(Required) ",
+											"type": "file",
+											"src": "/C:/Users/johnk/Pictures/Screenshots/Screenshot (264).png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/articles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"articles"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "data",
+													"value": "co",
+													"description": "(Required) ",
+													"type": "text"
+												},
+												{
+													"key": "image",
+													"description": "(Required) ",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/articles",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": -6996387,\n  \"title\": \"cupidatat aliqua\",\n  \"content\": \"in\",\n  \"image\": {\n    \"id\": 23823573,\n    \"filename\": \"Excepteur\",\n    \"filepath\": \"dolor non\",\n    \"uploadedAt\": \"1975-03-18T05:12:17.651Z\"\n  },\n  \"createdAt\": \"2007-10-22T15:40:51.936Z\",\n  \"updatedAt\": \"1983-06-28T12:37:36.361Z\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "images",
+					"item": [
+						{
+							"name": "{id}",
+							"item": [
+								{
+									"name": "get Image",
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "password",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "admin",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/images/26",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"images",
+												"26"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/images/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"images",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "ut est qui amet occa"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "upload",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"description": "(Required) ",
+											"type": "file",
+											"src": "/C:/Users/johnk/Pictures/Screenshots/Screenshot (241).png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/images",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"images"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "image",
+													"description": "(Required) ",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/images",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"images"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": 75786261,\n  \"filename\": \"dolor aliqua ipsum Lorem\",\n  \"filepath\": \"tempor fugiat Excepteur ipsum m\",\n  \"uploadedAt\": \"2006-10-24T08:39:04.917Z\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "login",
+							"item": [
+								{
+									"name": "Login",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Authentication successful",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"voluptate\",\n  \"password\": \"velit amet\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/login",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"login"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"token\": \"enim anim id tempor\",\n  \"username\": \"ut dolore\",\n  \"role\": \"Lorem pariatur elit voluptate enim\"\n}"
+										},
+										{
+											"name": "Invalid credentials",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"voluptate\",\n  \"password\": \"velit amet\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/login",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"login"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"token\": \"enim anim id tempor\",\n  \"username\": \"ut dolore\",\n  \"role\": \"Lorem pariatur elit voluptate enim\"\n}"
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "password",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	]
+}
