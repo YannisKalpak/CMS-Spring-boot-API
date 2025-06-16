@@ -11,7 +11,7 @@ All development is done locally using:
   •	MySQL (via XAMPP & phpMyAdmin) creating the database named cmsdb, the tables are created and updated on their own through the project
   •	Maven for build/test/run
   •	VS Code with Java Extension Pack (Microsoft) and Java Auto Config Extension Pack (Pleiades) are important for running this project, 
-    most important being that although this project's Java version is written as Java 17 it was run using VS code Java runtime for Java 23.
+    most important being that although this project's Java version is written as Java 17 it was run using VS code Java runtime for Java 23. So it means there might be an error and not use the correct    dependecy versions if that is not the case and the project might not be able to run. The Java Language server extension by Apache Netbeans might also prove very useful.
 ________________________________________
 Tech Stack
 Layer	Technology
@@ -40,7 +40,7 @@ ________________________________________
 Running & Testing
 
 Use your terminal in project root (....\CMS-Spring-boot-API\cms):
-# Run all unit tests on embedded H2
+# Run all unit tests on embedded H2 and see if they are sucessfull
 mvn clean test
 
 # Build & package, runs tests as well
@@ -48,12 +48,14 @@ mvn clean install
 
 # Launch the application
 mvn spring-boot:run
+
 Once the project is running, you can access:
 •	Swagger UI: http://localhost:8080/swagger-ui/index.html#/
 •	OpenAPI JSON: http://localhost:8080/v3/api-docs
 For testing the endpoints and interacting with the features of the project
 
 API Endpoints
+
 Authentication
 Method	URL	Body	Response	Role
 POST	/api/auth/login	{ "username":"admin","password":"password" }	{ token, username, role }	Admin
