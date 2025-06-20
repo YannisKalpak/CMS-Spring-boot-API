@@ -11,7 +11,7 @@ All development is done locally using:
   •	MySQL (via XAMPP & phpMyAdmin) creating the database named cmsdb, the tables are created and updated on their own through the project
   •	Maven for build/test/run
   •	VS Code with Java Extension Pack (Microsoft) and Java Auto Config Extension Pack (Pleiades) are important for running this project, 
-    most important being that although this project's Java version is written as Java 17 it was run using VS code Java runtime for Java 23. So it means there might be an error and not use the correct    dependecy versions if that is not the case and the project might not be able to run. The Java Language server extension by Apache Netbeans might also prove very useful.
+    most important being that although this project's Java version is written as Java 17 it was run using VS code Java runtime for Java 23. So it means there might be an error and not use the correct dependecy versions if that is the case, the project might not be able to run. The Java Language server extension by Apache Netbeans might also prove very useful.
 ________________________________________
 Tech Stack
 Layer	Technology
@@ -73,7 +73,7 @@ Method	URL	Body	Response	Role
 POST	/api/images	multipart/form-data– image (file)	Image	Admin
 GET	/api/images/{id}	—	raw binary image	Admin, Guest
 
-The POST /api/articles endpoint needs a JSON input in the Data text field and then to upload an image from the local directory when testing in either Swagger UI or Postman. For example data: {"title":"….","content":"…….."}. The same goes for the PUT endpoint so that it updates the article chosen by id and in the POST /api/images endpoint it needs an image to be uploaded from the computers local directory to the SQL database. It is also important to note that many of these endpoints need confirmation or authentication that an admin user is testing them on Swagger UI or Postman the admin credentials might be asked for authentication, if that happens then use the credentials for the admin user (username: admin, password: password) seeded by the DataInitializer class to be able to run and test the endpoints. These credentials are seeded in the database by the DataInitializer class can also be used by the POST /api/auth/login endpoint and it will show the token, also the database saves the password of all users in a 512 bit hash so there no security violations when running.
+The POST /api/articles endpoint needs a JSON input in the Data text field and then to upload an image from the local directory when testing in either Swagger UI or Postman. For example data: {"title":"….","content":"…….."}. The same goes for the PUT endpoint so that it updates the article chosen by id and in the POST /api/images endpoint it needs an image to be uploaded from the computers local directory to the SQL database. It is also important to note that many of these endpoints need confirmation or authentication that an admin user is testing them on Swagger UI or Postman the admin credentials might be asked for authentication, if that happens then use the credentials for the admin user (username: admin, password: password) seeded by the DataInitializer class to be able to run and test the endpoints. These credentials are seeded in the database by the DataInitializer class can also be used by the POST /api/auth/login endpoint and it will show the token, also the database saves the password of all users in a 512 bit hash so there are no security violations when running.
 
 Data Model
 •	User: id, username (unique), passwordHash, role
